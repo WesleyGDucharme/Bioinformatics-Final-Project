@@ -1,5 +1,8 @@
 """K-mer featurizer for DNA sequences.
 
+Authors: Wesley Ducharme
+Date: 2025-11-10
+
 Provides functions to convert DNA sequences into k-mer frequency vectors
 and matrices.
 A k-mer is a substring of length k composed of the characters A, C, G, and T.
