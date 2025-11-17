@@ -1,0 +1,16 @@
+# white list file
+01B
+01_AE
+02_AG
+A1
+A1C
+A1D
+B
+BC
+BF
+BF1
+C
+D
+F1
+G
+O

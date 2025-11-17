@@ -8,13 +8,11 @@ Date: 2025-11-11
 """
 
 from dataclasses import dataclass
-from typing import Optional, Literal
+from typing import Optional, Literal, Tuple
 import numpy as np
-
-# Note: avoid importing scikit-learn / scipy at module import time so tests
-# can run in environments where those binary dependencies are not available
-# or are incompatible with the installed NumPy. We provide lightweight
-# NumPy-based scaling and SVD implementations used by the Preprocessor.
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import TruncatedSVD
+from scipy import sparse
 
 ReductionRule = Literal["avg_nnz", "fraction_of_avg_nnz", "fixed"]
 
@@ -55,41 +53,60 @@ class Preprocessor:
       pre.fit(X_train)
       X_train_proc = pre.transform(X_train)
       X_test_proc = pre.transform(X_test)
-      
-      """
-    scale: bool = True # whether to standard scale features
-    svd_rule: Optional[ReductionRule] = "avg_nnz"  # None disables SVD reduction
-    svd_fraction: float = 0.10 # only used if svd_rule=="fraction_of_avg_nnz"
-    svd_fixed_k: Optional[int] = None  # only used if svd_rule=="fixed"
-    random_state: int = 42 
+    """
 
-    # fitted objects
-    # _scaler will be a dict with 'mean' and 'scale' when fitted
-    _scaler: Optional[dict] = None
-    # _svd will be a dict with 'components_' (Vt) and 'explained_' (singular values)
-    _svd: Optional[dict] = None
-    _n_components_: Optional[int] = None # number of SVD components after fitting
+    def __init__(self, *, scale: bool = True, svd_rule: Optional[str] = None, svd_fraction: float = 0.1, svd_fixed_k: Optional[int] = None, random_state: Optional[int] = 42,) -> None:
+        """Initialize the Preprocessor with given options."""
+        self.scale = scale
+        self.svd_rule = svd_rule
+        self.svd_fraction = svd_fraction
+        self.svd_fixed_k = svd_fixed_k
+        self.random_state = random_state
+
+        self._scaler = None
+        self._svd = None
+        self._n_components_ = None  # set in fit() if SVD is used
+
+    def _decide_k(self, X) -> Optional[int]:
+        """Decide number of SVD components based on rule and data X."""
+        if self.svd_rule is None:
+            return None
+
+        n_samples, n_features = X.shape
+
+        if self.svd_rule == "fraction_of_avg_nnz":
+            if sparse.issparse(X):
+                # nnz per row (CSR/CSC safe)
+                row_nnzs = np.diff(X.tocsr().indptr)
+            else:
+                # dense path
+                row_nnzs = np.count_nonzero(X, axis=1)
+            avg_nnz = float(np.mean(row_nnzs))
+            k = int(np.floor(self.svd_fraction * avg_nnz))
+        elif self.svd_rule in ("fixed_k", "fixed"):
+            if self.svd_fixed_k is None:
+                raise ValueError("svd_rule='fixed_k' requires svd_fixed_k")
+            k = int(self.svd_fixed_k)
+        else:
+            raise ValueError(f"Unknown svd_rule: {self.svd_rule!r}")
+
+        # Guard rails for sklearn TruncatedSVD
+        # must be 1 <= k < min(n_samples, n_features)
+        k = max(1, k)
+        k = min(k, n_features - 1, n_samples - 1)
+        return k
 
     def fit(self, X: np.ndarray) -> "Preprocessor":
         """Fit the preprocessor to data X."""
         Z = X
         if self.scale:
-            # compute column means and std (population std, ddof=0) like sklearn
-            mean = np.mean(Z, axis=0)
-            scale = np.std(Z, axis=0)
-            # avoid division by zero
-            scale[scale == 0.0] = 1.0
-            self._scaler = {"mean": mean, "scale": scale}
-            Z = (Z - mean) / scale
+            self._scaler = StandardScaler(with_mean=True, with_std=True, copy=True)
+            Z = self._scaler.fit_transform(Z)
         if self.svd_rule:
             k = choose_n_components(Z, self.svd_rule, self.svd_fraction, self.svd_fixed_k)
-            # compute thin SVD via numpy; for shape (n_samples, n_features)
-            # np.linalg.svd returns U, s, Vt where U @ diag(s) @ Vt == Z
-            U, s, Vt = np.linalg.svd(Z, full_matrices=False)
-            # store components (Vt) and singular values
-            self._svd = {"components_": Vt, "singular_values_": s}
-            # project to k components: U[:, :k] * s[:k]
-            Z = U[:, :k] * s[:k]
+            self._svd = TruncatedSVD(n_components=k, algorithm="randomized",
+                                     random_state=self.random_state)
+            Z = self._svd.fit_transform(Z)
             self._n_components_ = k
         return self
 
@@ -97,15 +114,9 @@ class Preprocessor:
         """Transform data X using the fitted preprocessor."""
         Z = X
         if self._scaler is not None:
-            mean = self._scaler["mean"]
-            scale = self._scaler["scale"]
-            Z = (Z - mean) / scale
+            Z = self._scaler.transform(Z)
         if self._svd is not None:
-            # project using stored components: components_ is Vt
-            Vt = self._svd["components_"]
-            k = self._n_components_ if self._n_components_ is not None else Vt.shape[0]
-            # projection onto first k components: X @ Vt.T[:, :k]
-            Z = Z @ Vt.T[:, :k]
+            Z = self._svd.transform(Z)
         return Z
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:

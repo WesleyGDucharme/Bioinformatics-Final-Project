@@ -15,7 +15,12 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 
 def make_model(name: str):
-    """Factory function to create classifier models by name."""
+    """Factory function to create classifier models by name.
+    
+    Returns an untrained sklearn classifier instance.
+    
+    It does this for the future use in cross-validation and training.
+    """
     key = name.lower()
     if key in ("10_nearest_neighbors", "knn_10", "knn"):
         return KNeighborsClassifier(n_neighbors=10, weights="uniform", metric="euclidean")
@@ -42,7 +47,7 @@ def make_model(name: str):
         return RandomForestClassifier(n_estimators=10, criterion="gini", random_state=42)
     if key == "adaboost":
         return AdaBoostClassifier(
-            base_estimator=DecisionTreeClassifier(random_state=42),
+            estimator=DecisionTreeClassifier(random_state=42),
             n_estimators=50, algorithm="SAMME.R", random_state=42
         )
     if key in ("gaussian_naive_bayes", "gnb"):
