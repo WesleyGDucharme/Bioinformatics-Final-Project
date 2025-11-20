@@ -75,7 +75,7 @@ def cross_validate(X: np.ndarray, y: np.ndarray, model_name: str, preprocessor: 
     if preprocessor is None:
         preprocessor = Preprocessor(scale=True, svd_rule="avg_nnz", random_state=random_state)
 
-    skf = StratifiedKFold(n_splits=n_splits, shuffle=False)
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     accs: List[float] = []
     fit_times: List[float] = []
     pred_times: List[float] = []
