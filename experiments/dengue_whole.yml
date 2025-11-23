@@ -1,0 +1,8 @@
+dataset: dengue_whole
+k: 
+cv_splits: 10
+seed: 42
+
+models:
+  - linear_svm
+

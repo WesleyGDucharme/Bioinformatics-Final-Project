@@ -1,0 +1,8 @@
+dataset: hbv_whole
+k: 5
+cv_splits: 10
+seed: 42
+
+models:
+  - linear_svm
+

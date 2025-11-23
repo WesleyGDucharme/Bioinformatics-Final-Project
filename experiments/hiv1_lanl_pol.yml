@@ -1,0 +1,8 @@
+dataset: hiv1_lanl_pol
+k: 6
+cv_splits: 10
+seed: 42
+
+models:
+  - linear_svm
+

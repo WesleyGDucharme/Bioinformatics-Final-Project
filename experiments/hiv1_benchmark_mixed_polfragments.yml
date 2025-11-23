@@ -1,0 +1,21 @@
+dataset: hiv1_benchmark_mixed_polfragments
+k: 5
+cv_splits: 10
+seed: 42
+
+models:
+  - linear_svm
+  - quadratic_svm
+  - cubic_svm
+  - 10_nearest_neighbors
+  - nearest_centroid_mean
+  - nearest_centroid_median
+  - logistic_regression
+  - sgd
+  - decision_tree
+  - random_forest
+  - adaboost
+  - gaussian_naive_bayes
+  - lda
+  - qda
+  - multilayer_perceptron
