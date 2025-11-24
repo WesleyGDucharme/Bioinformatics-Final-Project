@@ -2,6 +2,9 @@
 """
 scripts/run_experiment.py
 
+Author: Wesley Ducharme
+Date: 2025-11-22
+
 Run a single K-fold cross-validation experiment for one dataset/model at a
 given k-mer length (default k=6, as in the Kameris paper).
 
@@ -19,8 +22,6 @@ Repeatable for other datasets / models and then aggregate results.
 
 Outputs a JSON file with detailed results, including per-fold metrics and confusion matrices.
 
-Authors: Wesley Ducharme
-Date: 2025-11-22
 """
 
 from __future__ import annotations
