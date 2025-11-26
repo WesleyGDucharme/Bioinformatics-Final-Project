@@ -23,7 +23,7 @@ import argparse
 
 import numpy as np
 
-from kameris_repo import datasets, modmap
+from kameris_reimp import datasets, modmap
 
 # Pure HIV-1 subtypes used in Figure 2 of the paper
 PURE_SUBTYPES = {"A1", "A6", "B", "C", "D", "F1", "G", "O", "U"}

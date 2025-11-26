@@ -24,7 +24,7 @@ import random
 import numpy as np
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-from kameris_repo import datasets, kmer, preprocess, models
+from kameris_reimp import datasets, kmer, preprocess, models
 
 
 def run_pol2010_benchmark(

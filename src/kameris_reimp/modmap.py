@@ -170,7 +170,7 @@ def kmer_modmap_from_sequences(
     return coords, D
 
 
-# Optional: dataset-level helper (so you don’t re-write boilerplate)
+# dataset-level helper (so don’t re-write boilerplate)
 
 def modmap_for_dataset(
     dataset_key: str,

@@ -10,13 +10,13 @@ given k-mer length (default k=6, as in the Kameris paper).
 
 Usage example (from repo root):
 
-    PYTHONPATH=src python3 scripts/run_experiment.py \
-        --dataset hiv1_lanl_whole \
-        --model linear_svm \
-        --k 6 \
-        --cv-splits 10 \
-        --seed 42 \
-        --out results/hiv1_lanl_whole_linear_svm_k6.json
+PYTHONPATH=src python3 scripts/run_experiment.py \
+    --dataset hiv1_lanl_whole \
+    --model linear_svm \
+    --k 6 \
+    --cv-splits 10 \
+    --seed 42 \
+    --out results/hiv1_lanl_whole_linear_svm_k6.json
 
 Repeatable for other datasets / models and then aggregate results.
 
@@ -37,7 +37,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, recall_score, confusion_matrix
 from sklearn.model_selection import StratifiedKFold
 
-from kameris_repo import datasets, kmer, preprocess, models
+from kameris_reimp import datasets, kmer, preprocess, models
 
 
 

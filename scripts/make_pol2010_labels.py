@@ -152,7 +152,7 @@ def main():
         if sid not in id2label_raw:
             id2label_raw[sid] = lab  # verbatim
 
-    # Apply ≥ min
+    # Apply >= min
     counts_all = Counter(id2label_raw.values())
     keep_labels = {c for c, n in counts_all.items() if n >= args.min}
     kept_pairs = [(sid, lab) for sid, lab in id2label_raw.items() if lab in keep_labels]

@@ -34,7 +34,7 @@ import os
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 
-from kameris_repo import datasets, kmer
+from kameris_reimp import datasets, kmer
 
 DATASET_NAT = "hiv1_lanl_pol"
 DATASET_SYN = "hiv1_synthetic_polfragments"

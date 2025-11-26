@@ -1,6 +1,6 @@
 """Preprocessing module: scaling and dimensionality reduction via SVD.
 Implements a Preprocessor class that can scale data and reduce its dimensionality
-using Truncated SVD, based on configurable rules.
+using Truncated SVD.
 
 Authors: Wesley Ducharme
 Date: 2025-11-11
@@ -23,7 +23,7 @@ def avg_nnz_per_row(X: np.ndarray) -> float:
 
 def choose_n_components(X: np.ndarray, rule: ReductionRule, fraction: float = 0.10, fixed_k: Optional[int] = None) -> int:
     """
-    Paper-driven dimension rule (configurable):
+    Dimension rules from the paper (configurable):
     - 'avg_nnz': n_components = round(average # of nonzeros per row)
     - 'fraction_of_avg_nnz': round(fraction * average # of nonzeros)
     - 'fixed': use fixed_k (sanity-capped)

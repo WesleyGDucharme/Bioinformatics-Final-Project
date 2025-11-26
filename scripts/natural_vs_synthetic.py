@@ -39,7 +39,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
 
-from kameris_repo import datasets, kmer, preprocess, models
+from kameris_reimp import datasets, kmer, preprocess, models
 
 
 def run_natural_vs_synthetic(
@@ -225,7 +225,6 @@ def main():
         seed=args.seed,
         out_path=args.out,
     )
-
 
 if __name__ == "__main__":
     main()

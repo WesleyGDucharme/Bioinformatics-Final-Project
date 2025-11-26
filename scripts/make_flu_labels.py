@@ -125,7 +125,7 @@ def main():
             if not os.path.isfile(fpath):
                 missing_files.append(os.path.basename(fname))
 
-        # track non-whitelisted to report later (we still collect counts, but they won't be kept)
+        # track non-whitelisted to report later (still collect counts, but they won't be kept)
         if label not in whitelist:
             non_whitelisted[label] += 1
 
