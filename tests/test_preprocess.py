@@ -6,7 +6,7 @@ Date: 2025-11-11
 """
 
 import numpy as np
-from kameris_repo.preprocess import Preprocessor, avg_nnz_per_row, choose_n_components
+from kameris_reimp.preprocess import Preprocessor, avg_nnz_per_row, choose_n_components
 
 def test_avg_nnz_and_choose_components():
     """Test average non-zero calculation and component selection rules."""

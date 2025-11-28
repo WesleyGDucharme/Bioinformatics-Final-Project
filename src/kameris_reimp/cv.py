@@ -1,7 +1,7 @@
 """
 Cross-validation functionality for classification models.
 Made for evaluating models with preprocessing steps.
-What are these preprocessing steps? See preprocess.py.
+See preprocess.py step details.
 
 Authors: Wesley Ducharme
 Date: 2025-11-11

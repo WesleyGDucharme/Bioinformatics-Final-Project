@@ -123,8 +123,8 @@ def run_experiment(
 
     # Preprocessing: matching the paper's "dim = avg # nonzeros" rule
     pre = preprocess.Preprocessor(
-        svd_rule="avg_nnz",
-        svd_fraction=1.0, # unused for 'avg_nnz' but kept explicit
+        svd_rule="fraction_of_avg_nnz",
+        svd_fraction=0.1, 
         svd_fixed_k=None,
         scale=True,
         random_state=seed,

@@ -6,15 +6,15 @@ Date: 2025-11-11
 import numpy as np
 from sklearn.datasets import make_classification
 
-from kameris_repro.models import make_model
-from kameris_repro.cv import cross_validate
-from kameris_repro.preprocess import Preprocessor
+from kameris_reimp.models import make_model
+from kameris_reimp.cv import cross_validate
+from kameris_reimp.preprocess import Preprocessor
 
 def test_model_registry_basic():
     """ Test that model factory returns models for known names."""
     names = [
         "knn_10", "nearest_centroid_mean", "nearest_centroid_median",
-        "logreg", "linear_svm", "quadratic_svm", "cubic_svm",
+        "logreg", "linear_svm", "fquadratic_svm", "cubic_svm",
         "sgd", "decision_tree", "random_forest", "adaboost",
         "gnb", "lda", "qda", "mlp",
     ]

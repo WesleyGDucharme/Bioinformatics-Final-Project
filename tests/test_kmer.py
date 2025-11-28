@@ -2,7 +2,7 @@
 """
 
 import numpy as np
-from kameris_repo.kmer import kmer_index, kmer_vector, all_kmers
+from kameris_reimp.kmer import kmer_index, kmer_vector, all_kmers
 
 def test_all_kmers_ordering():
     """Test that all_kmers generates correct lexicographic order."""
