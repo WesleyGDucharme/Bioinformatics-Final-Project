@@ -13,10 +13,10 @@ Purpose:
     This corresponds to the setup for Figure 4 in the Kameris paper:
       - Train/visualize on natural + synthetic pol sequences
       - Same k-mer representation as other experiments
-      - Here we use k = 5 for consistency with the rest of this repro.
+      - Here we use k = 6 for consistency with the rest of this repro.
 
 Output:
-    results/modmap_hiv1_pol_nat_syn__k5.tsv with columns:
+    results/modmap_hiv1_pol_nat_syn__k6.tsv with columns:
 
         sample_id    (integer index 0..N-1)
         type         ("natural" or "synthetic")
@@ -25,33 +25,17 @@ Output:
         y            (MoDMap coordinate 2)
         z            (MoDMap coordinate 3)
 
-    You can then use your generic modmap_plot.py to make:
-      - Left panel: color by `type` (natural vs synthetic)
-      - Right panel: color by `subtype`
 """
 
 import os
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
 
-from kameris_reimp import datasets, kmer
+from kameris_reimp import datasets, modmap
 
 DATASET_NAT = "hiv1_lanl_pol"
 DATASET_SYN = "hiv1_synthetic_polfragments"
-K = 5
-OUT_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k5.tsv")
-
-
-def compute_embedding(X: np.ndarray, n_components: int = 3, random_state: int = 42) -> np.ndarray:
-    """
-    Simple MoDMap-style embedding:
-      1. Center columns of the k-mer matrix
-      2. Apply TruncatedSVD to get 3D coordinates
-    """
-    X_centered = X - X.mean(axis=0, keepdims=True)
-    svd = TruncatedSVD(n_components=n_components, random_state=random_state)
-    coords = svd.fit_transform(X_centered)
-    return coords
+K = 6
+OUT_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k6.tsv")
 
 
 def main():
@@ -77,16 +61,15 @@ def main():
     all_subtypes = np.concatenate([labels_nat, labels_syn], axis=0)
     all_types = np.array(["natural"] * n_nat + ["synthetic"] * n_syn)
 
-    # --- Build k-mer matrix (k=5) ---
-    print("[INFO] Computing k-mer matrix for natural + synthetic pol (k=5)...")
-    X, vocab, valid_counts = kmer.batch_kmer_matrix(all_seqs, k=K, normalize=True)
-    print(f"[INFO] k-mer matrix shape: {X.shape}")
-    print(f"[INFO] #valid k-mers per sequence (min/mean/max): "
-          f"{min(valid_counts)} / {np.mean(valid_counts):.1f} / {max(valid_counts)}")
-
-    # --- 3D embedding via TruncatedSVD ---
-    print("[INFO] Computing 3D embedding (TruncatedSVD)...")
-    coords = compute_embedding(X, n_components=3, random_state=42)
+    # --- 3D MoDMap via Manhattan distance + classical MDS ---
+    print("[INFO] Computing MoDMap (Manhattan distance + classical MDS)...")
+    coords, _D = modmap.kmer_modmap_from_sequences(
+        all_seqs,
+        k=K,
+        metric="manhattan",
+        n_components=3,
+        normalize=True,
+    )
     assert coords.shape[0] == len(all_seqs)
 
     # --- Write TSV ---

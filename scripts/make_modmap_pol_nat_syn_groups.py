@@ -1,38 +1,19 @@
 #!/usr/bin/env python3
 """
-scripts/make_modmap_pol_nat_syn_groups.py
+Group MoDMap points for natural + synthetic pol embeddings.
 
-Author: Wesley Ducharme
-Date: 2025-11-23
-
-Purpose:
-    Take the MoDMap TSV for natural + synthetic pol (with a 'subtype'
-    column) and collapse subtypes into 5 groups:
-
-        A, B, C, D, other
-
-    Rough rule:
-      - 'A', 'A1', 'A2', 'A6', ...  -> 'A'
-      - 'B', 'B1', ...              -> 'B'
-      - 'C', 'C1', ...              -> 'C'
-      - 'D', 'D1', ...              -> 'D'
-      - everything else             -> 'other'
-
-Input:
-    data/modmap_hiv1_pol_nat_syn__k5.tsv
-       columns: sample_id, type, subtype, x, y, z
-
-Output:
-    data/modmap_hiv1_pol_nat_syn__k5__groups.tsv
-       columns: sample_id, type, subtype, group, x, y, z
+Two grouping modes:
+  - type (left panel): group = natural vs synthetic
+  - subtype (right panel): collapse subtypes into A/B/C/D/other
 """
 
 import os
 import re
+import argparse
 import pandas as pd
 
-IN_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k5.tsv")
-OUT_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k5__groups.tsv")
+IN_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k6.tsv")
+OUT_TSV = os.path.join("data", "modmap_hiv1_pol_nat_syn__k6__groups.tsv")
 
 
 def collapse_subtype(st: str) -> str:
@@ -59,25 +40,50 @@ def collapse_subtype(st: str) -> str:
 
 
 def main():
-    if not os.path.exists(IN_TSV):
-        raise SystemExit(f"Input TSV not found: {IN_TSV}")
+    ap = argparse.ArgumentParser(
+        description="Group MoDMap TSV for natural+synthetic pol (type vs synthetic OR collapsed subtypes)."
+    )
+    ap.add_argument(
+        "--mode",
+        choices=["type", "subtype"],
+        default="type",
+        help="Grouping mode: 'type' = natural vs synthetic (left panel); "
+             "'subtype' = A/B/C/D/other (right panel). Default: type.",
+    )
+    ap.add_argument(
+        "--input",
+        default=IN_TSV,
+        help=f"Input TSV path (default: {IN_TSV})",
+    )
+    ap.add_argument(
+        "--out",
+        default=OUT_TSV,
+        help=f"Output TSV path (default: {OUT_TSV})",
+    )
+    args = ap.parse_args()
 
-    df = pd.read_csv(IN_TSV, sep="\t")
-    if "subtype" not in df.columns:
-        raise SystemExit(f"'subtype' column not found in {IN_TSV}")
+    if not os.path.exists(args.input):
+        raise SystemExit(f"Input TSV not found: {args.input}")
 
-    df["group"] = df["subtype"].apply(collapse_subtype)
+    df = pd.read_csv(args.input, sep="\t")
+    for col in ("sample_id", "type", "subtype", "x", "y"):
+        if col not in df.columns:
+            raise SystemExit(f"Column '{col}' not found in {args.input}")
 
-    # Keep useful columns in a nice order
+    if args.mode == "type":
+        df["group"] = df["type"].astype(str)
+    else:
+        df["group"] = df["subtype"].apply(collapse_subtype)
+
     cols = ["sample_id", "type", "subtype", "group", "x", "y"]
     if "z" in df.columns:
         cols.append("z")
     df_out = df[cols]
 
-    os.makedirs("results", exist_ok=True)
-    df_out.to_csv(OUT_TSV, sep="\t", index=False)
+    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+    df_out.to_csv(args.out, sep="\t", index=False)
 
-    print(f"[OK] Wrote grouped TSV to {OUT_TSV}")
+    print(f"[OK] Wrote grouped TSV to {args.out}")
     print("Group counts:")
     print(df_out["group"].value_counts().sort_index())
 

@@ -121,7 +121,7 @@ def run_experiment(
     X, vocab, valid_counts = kmer.batch_kmer_matrix(seqs, k=k)
     # X can be numpy array or scipy sparse; Preprocessor handles both.
 
-    # Preprocessing: matching the paper's "dim = avg # nonzeros" rule
+    # Preprocessing: matching the paper's "dim = 0.1 * avg # nonzeros" rule
     pre = preprocess.Preprocessor(
         svd_rule="fraction_of_avg_nnz",
         svd_fraction=0.1, 

@@ -16,24 +16,27 @@ from scipy import sparse
 
 ReductionRule = Literal["avg_nnz", "fraction_of_avg_nnz", "fixed"]
 
-def avg_nnz_per_row(X: np.ndarray) -> float:
+def avg_nnz_per_row(X) -> float:
     """Average number of non-zero entries per sample vector."""
-    # Count nonzeros per row, average (float).
-    return np.count_nonzero(X, axis=1).mean()
+    if sparse.issparse(X):
+        row_nnzs = np.diff(X.tocsr().indptr)
+        return float(row_nnzs.mean()) if row_nnzs.size else 0.0
+    return float(np.count_nonzero(X, axis=1).mean()) if X.size else 0.0
 
-def choose_n_components(X: np.ndarray, rule: ReductionRule, fraction: float = 0.10, fixed_k: Optional[int] = None) -> int:
+def choose_n_components(X_raw, rule: ReductionRule, fraction: float = 0.10, fixed_k: Optional[int] = None) -> int:
     """
-    Dimension rules from the paper (configurable):
+    Dimension rules from the paper (configurable), computed on the *original*
+    k-mer matrix (before scaling) to preserve sparsity information:
     - 'avg_nnz': n_components = round(average # of nonzeros per row)
     - 'fraction_of_avg_nnz': round(fraction * average # of nonzeros)
     - 'fixed': use fixed_k (sanity-capped)
     Returns the chosen number of components.
     """
-    m, d = X.shape
+    m, d = X_raw.shape
     if rule == "avg_nnz":
-        n = int(round(avg_nnz_per_row(X)))
+        n = int(round(avg_nnz_per_row(X_raw)))
     elif rule == "fraction_of_avg_nnz":
-        n = int(round(fraction * avg_nnz_per_row(X)))
+        n = int(round(fraction * avg_nnz_per_row(X_raw)))
     elif rule == "fixed":
         if fixed_k is None:
             raise ValueError("fixed_k must be set when rule='fixed'")
@@ -100,10 +103,11 @@ class Preprocessor:
         """Fit the preprocessor to data X."""
         Z = X
         if self.scale:
-            self._scaler = StandardScaler(with_mean=True, with_std=True, copy=True)
+            # with_mean=False keeps sparsity
+            self._scaler = StandardScaler(with_mean=False, with_std=True, copy=True)
             Z = self._scaler.fit_transform(Z)
         if self.svd_rule:
-            k = choose_n_components(Z, self.svd_rule, self.svd_fraction, self.svd_fixed_k)
+            k = choose_n_components(X, self.svd_rule, self.svd_fraction, self.svd_fixed_k)
             self._svd = TruncatedSVD(n_components=k, algorithm="randomized",
                                      random_state=self.random_state)
             Z = self._svd.fit_transform(Z)

@@ -6,14 +6,14 @@ Date: 2025-11-23
 Make a 3D MoDMap for HIV-1 LANL whole genomes (pure subtypes only).
 
 - Dataset: hiv1_lanl_whole
-- k-mer length: default k = 5 (paper used k = 6; we use 5 for consistency)
+- k-mer length: default k = 6
 - Distance: Manhattan in k-mer frequency space
 - Embedding: 3D metric MDS
 - Labels kept: pure HIV-1 subtypes
     A1, A6, B, C, D, F1, G, O, U
 
 Outputs:
-  results/modmap_hiv1_lanl_whole__k5__pure.tsv
+  results/modmap_hiv1_lanl_whole__k6__pure.tsv
     columns: id, label, x, y, z
 """
 
@@ -42,8 +42,8 @@ def main():
     ap.add_argument(
         "--k",
         type=int,
-        default=5,
-        help="k-mer length (default: 5).",
+        default=6,
+        help="k-mer length (default: 6).",
     )
     ap.add_argument(
         "--metric",

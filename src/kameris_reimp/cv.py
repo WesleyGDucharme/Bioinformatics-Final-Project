@@ -73,7 +73,7 @@ def cross_validate(X: np.ndarray, y: np.ndarray, model_name: str, preprocessor: 
     Returns averaged accuracy and timing; confusion matrix aggregated over all folds.
     """
     if preprocessor is None:
-        preprocessor = Preprocessor(scale=True, svd_rule="avg_nnz", random_state=random_state)
+        preprocessor = Preprocessor(scale=True, svd_rule="fraction_of_avg_nnz", random_state=random_state)
 
     skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     accs: List[float] = []

@@ -23,7 +23,7 @@ Usage (for a dataset already loaded via datasets.py):
     labels = ds.labels
 
     coords, D = modmap.kmer_modmap_from_sequences(
-        seqs, k=5, metric="manhattan", n_components=3
+        seqs, k=6, metric="manhattan", n_components=3
     )
 
     # coords is an (n_samples, 3) array of embedding coordinates
@@ -94,7 +94,7 @@ def classical_mds(
 
 def kmer_distance_matrix(
     seqs: Iterable[str],
-    k: int = 5,
+    k: int = 6,
     metric: str = "manhattan",
     normalize: bool = True,
 ) -> Tuple[np.ndarray, np.ndarray]:
@@ -105,11 +105,9 @@ def kmer_distance_matrix(
     ----------
     seqs : iterable of str
         Nucleotide sequences (already filtered as desired).
-    k : int, default=5
-        k-mer length (paper uses k=6; you are standardizing on k=5).
+    k : int, default=6
     metric : str, default="manhattan"
         Distance metric for pairwise_distances (e.g. "manhattan", "euclidean").
-        The paper uses Manhattan distance.
     normalize : bool, default=True
         Passed through to kmer.batch_kmer_matrix to get normalized frequencies.
 
@@ -136,7 +134,7 @@ def kmer_distance_matrix(
 def kmer_modmap_from_sequences(
     seqs: Iterable[str],
     *,
-    k: int = 5,
+    k: int = 6,
     metric: str = "manhattan",
     n_components: int = 3,
     normalize: bool = True,
@@ -149,14 +147,14 @@ def kmer_modmap_from_sequences(
     seqs : iterable of str
         Input sequences (already filtered to the subset you care about:
         e.g., just pure subtypes).
-    k : int, default=5
+    k : int, default=6
         K-mer length.
     metric : str, default="manhattan"
         Distance metric for pairwise distances.
     n_components : int, default=3
         Target embedding dimension (2D or 3D).
     normalize : bool, default=True
-        Whether to use normalized k-mer frequencies (recommended).
+        Whether to use normalized k-mer frequencies.
 
     Returns
     -------
@@ -175,7 +173,7 @@ def kmer_modmap_from_sequences(
 def modmap_for_dataset(
     dataset_key: str,
     *,
-    k: int = 5,
+    k: int = 6,
     metric: str = "manhattan",
     n_components: int = 3,
     label_filter: Optional[Callable[[str], bool]] = None,
@@ -187,16 +185,16 @@ def modmap_for_dataset(
     ----------
     dataset_key : str
         One of the keys from datasets.list_dataset_keys(), e.g. "hiv1_lanl_whole".
-    k : int, default=5
+    k : int, default=6
         K-mer length.
     metric : str, default="manhattan"
         Distance metric.
     n_components : int, default=3
         Embedding dimension.
     label_filter : callable or None
-        If provided, it will be called on each label and only samples
-        where label_filter(label) is True will be kept. This is where
-        you’ll plug in the “pure subtypes only” rule for Fig. 2.
+        If provided, a function that takes a label (str) and returns True
+        if the sample should be kept, False to exclude it. This is useful
+        for filtering to just pure subtypes, etc.
 
     Returns
     -------

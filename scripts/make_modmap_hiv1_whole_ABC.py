@@ -10,42 +10,30 @@ Purpose:
     sequences, restricted to (pure) subtypes A, B, and C.
 
     - Uses dataset: hiv1_lanl_whole
-    - k-mer length: k = 5
+    - k-mer length: k = 6
     - Subtype mapping:
         A1, A6 -> "A"
         B      -> "B"
         C      -> "C"
-    - Embedding: TruncatedSVD (3 components) on centered k-mer matrix.
+    - Embedding: classical MDS on Manhattan k-mer distances (3D)
 
 Output:
-    results/modmap_hiv1_ABC_k5.tsv with columns:
+    results/modmap_hiv1_ABC_k6.tsv with columns:
         sample_id, group, x, y, z
 """
 
 import os
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
 
-from kameris_reimp import datasets, kmer
+from kameris_reimp import datasets, modmap
 
 DATASET_KEY = "hiv1_lanl_whole"
-K = 5
-OUT_TSV = os.path.join("data", "modmap_hiv1_ABC_k5.tsv")
+K = 6
+OUT_TSV = os.path.join("data", "modmap_hiv1_ABC_k6.tsv")
 
 PURE_A = {"A1", "A6"}
 PURE_B = {"B"}
 PURE_C = {"C"}
-
-
-def compute_embedding(X: np.ndarray, n_components: int = 3, random_state: int = 42) -> np.ndarray:
-    """
-    Simple MoDMap-style embedding: center columns and apply TruncatedSVD
-    to get 3D coordinates.
-    """
-    X_centered = X - X.mean(axis=0, keepdims=True)
-    svd = TruncatedSVD(n_components=n_components, random_state=random_state)
-    coords = svd.fit_transform(X_centered)
-    return coords
 
 
 def main():
@@ -80,13 +68,15 @@ def main():
 
     groups = np.array(groups)
 
-    # Compute k-mer matrix (k=5)
-    print("[INFO] Computing k-mer matrix...")
-    X, vocab, _valid_counts = kmer.batch_kmer_matrix(seqs_sub, k=K, normalize=True)
-
-    # 3D embedding
-    print("[INFO] Computing 3D embedding (TruncatedSVD)...")
-    coords = compute_embedding(X, n_components=3, random_state=42)
+    # 3D MoDMap via Manhattan distances + classical MDS
+    print("[INFO] Computing MoDMap (Manhattan distance + classical MDS)...")
+    coords, _D = modmap.kmer_modmap_from_sequences(
+        seqs_sub,
+        k=K,
+        metric="manhattan",
+        n_components=3,
+        normalize=True,
+    )
 
     # Write TSV
     print(f"[INFO] Writing TSV to {OUT_TSV}")

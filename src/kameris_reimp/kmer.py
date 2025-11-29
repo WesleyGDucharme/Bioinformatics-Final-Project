@@ -19,6 +19,7 @@ Example:
 """
 
 from itertools import product
+import re
 from typing import Dict, Tuple, Iterable, List
 import numpy as np
 
@@ -33,29 +34,34 @@ def kmer_index(k: int) -> Dict[str, int]:
     """Map each k-mer to a column index [0..4^k-1] in lexicographic order."""
     return {kmer: i for i, kmer in enumerate(all_kmers(k))}
 
+def _clean_sequence(seq: str) -> str:
+    """Remove any non-ACGT characters and uppercase the sequence."""
+    # Using regex keeps the sliding-window loop simple and avoids per-window checks.
+    return re.sub(r"[^ACGTacgt]", "", seq).upper()
+
+
 def kmer_vector(seq: str, k: int, index: Dict[str, int], normalize: bool = True) -> Tuple[np.ndarray, int]:
     """
     Convert a DNA sequence to a k-mer frequency vector.
-    - Skips any window containing non-ACGT.
-    - If normalize=True, divides by number of valid windows (so the vector sums to 1.0 when valid>0).
-    Returns: (vector, valid_windows)
+    - Removes ambiguous/non-ACGT characters before counting.
+    - If normalize=True, divides counts by the cleaned sequence length (matching paper description).
+    Returns: (vector, windows_count) where windows_count = max(len(cleaned_seq)-k+1, 0).
     """
-    seq_u = seq.upper()
+    seq_clean = _clean_sequence(seq)
+    L = len(seq_clean)
+
     V = np.zeros(len(index), dtype=np.float64)
-    L = len(seq_u)
     if L < k:
         return V, 0
 
-    valid = 0
-    for i in range(L - k + 1):
-        kmer = seq_u[i:i + k]
-        if set(kmer) <= ALPHABET_SET:
-            V[index[kmer]] += 1.0
-            valid += 1
+    windows = L - k + 1
+    for i in range(windows):
+        kmer = seq_clean[i:i + k]
+        V[index[kmer]] += 1.0
 
-    if normalize and valid > 0:
-        V /= float(valid)
-    return V, valid
+    if normalize and L > 0:
+        V /= float(L)
+    return V, windows
 
 def batch_kmer_matrix(seqs: Iterable[str], k: int, normalize: bool = True) -> Tuple[np.ndarray, Dict[str, int], List[int]]:
     """

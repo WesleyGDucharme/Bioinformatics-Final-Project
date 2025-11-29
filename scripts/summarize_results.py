@@ -16,7 +16,7 @@ from statistics import mean, pstdev
 
 RESULTS_DIR = "results"
 DATASET_KEY = "hiv1_lanl_whole"
-K = 5 # k-mer length used in the experiments to summarize
+K = 6 # k-mer length used in the experiments to summarize
 
 # Map model key used in filenames to nice label in the table
 MODEL_DISPLAY = {

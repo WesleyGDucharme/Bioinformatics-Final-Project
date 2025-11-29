@@ -1,21 +1,8 @@
 dataset: hiv1_web_pol2010
-k: 5
+k: 6
 cv_splits: 10
 seed: 42
 
 runs:
   - model: linear_svm
-  - model: quadratic_svm
-  - model: cubic_svm
-  - model: 10_nearest_neighbors
-  - model: nearest_centroid_mean
-  - model: nearest_centroid_median
-  - model: logistic_regression
-  - model: sgd
-  - model: decision_tree
-  - model: random_forest
-  - model: adaboost
-  - model: gaussian_naive_bayes
-  - model: lda
-  - model: qda
-  - model: multilayer_perceptron
+

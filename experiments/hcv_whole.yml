@@ -1,5 +1,5 @@
 dataset: hcv_whole
-k: 5
+k: 6
 cv_splits: 10
 seed: 42
 
