@@ -1,0 +1,100 @@
+{
+  "experiment": "natural_vs_synthetic_pol",
+  "dataset_natural": "hiv1_lanl_pol",
+  "dataset_synthetic": "hiv1_synthetic_polfragments",
+  "model_name": "linear_svm",
+  "k": 6,
+  "cv_splits": 10,
+  "seed": 42,
+  "n_samples_total": 10044,
+  "n_natural": 8544,
+  "n_synthetic": 1500,
+  "folds": [
+    {
+      "fold_index": 1,
+      "train_size": 9039,
+      "test_size": 1005,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.12463569641113281,
+      "fold_time_seconds": 49.34602999687195
+    },
+    {
+      "fold_index": 2,
+      "train_size": 9039,
+      "test_size": 1005,
+      "accuracy": 0.9990049751243781,
+      "train_time_seconds": 0.14686822891235352,
+      "fold_time_seconds": 47.145225524902344
+    },
+    {
+      "fold_index": 3,
+      "train_size": 9039,
+      "test_size": 1005,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.13162875175476074,
+      "fold_time_seconds": 48.49192523956299
+    },
+    {
+      "fold_index": 4,
+      "train_size": 9039,
+      "test_size": 1005,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.13473129272460938,
+      "fold_time_seconds": 47.139121770858765
+    },
+    {
+      "fold_index": 5,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.1273481845855713,
+      "fold_time_seconds": 49.358190298080444
+    },
+    {
+      "fold_index": 6,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.1432955265045166,
+      "fold_time_seconds": 48.06499934196472
+    },
+    {
+      "fold_index": 7,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.14098763465881348,
+      "fold_time_seconds": 48.70703721046448
+    },
+    {
+      "fold_index": 8,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 0.999003984063745,
+      "train_time_seconds": 0.12711834907531738,
+      "fold_time_seconds": 48.259610176086426
+    },
+    {
+      "fold_index": 9,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.13761615753173828,
+      "fold_time_seconds": 49.131500005722046
+    },
+    {
+      "fold_index": 10,
+      "train_size": 9040,
+      "test_size": 1004,
+      "accuracy": 1.0,
+      "train_time_seconds": 0.13792872428894043,
+      "fold_time_seconds": 48.68042206764221
+    }
+  ],
+  "mean_accuracy": 0.9998008959188123,
+  "std_accuracy": 0.0003982082240391663,
+  "mean_fold_time_seconds": 48.43240616321564,
+  "mean_train_time_seconds": 0.1352158546447754,
+  "vocab_size": 4096,
+  "notes": "Binary classification: 'natural' = all pol genes from LANL; 'synthetic' = 1500 synthetic pol sequences. Preprocessing: scaling + TruncatedSVD(rule='fraction_of_avg_nnz', fraction=0.10)."
+}
