@@ -1,0 +1,17 @@
+LLM model used: ChatGPT 
+Version: GPT-5
+
+This ai.txt will be very similar to prior descriptions, as I used it in pretty much the same way as my other deliverables in Csc427.
+
+Use case:
+Throughout my work on the final project I used ChatGPT to:
+- Used it to help develop the scripts that run the experiments, using to draft skeleton outlines for the scripts and help me with coding implementation.
+- Used it help debug and plan how to run each script for each experiment.
+- Had it help me develop the source package and aid in debugging.
+- Had it draft some small tests to run the source package before committing to model training time.
+- Use of the LLM was limited solely towards code and method implementation within this repository.
+
+Notes:
+- I edited and ran all code locally to verify correctness.
+- AI suggestions were adapted and integrated into my own implementation unless a version the ai suggested worked really well the first time.
+- Not all outputs from ChatGPT were used directly — in some cases I rolled back to earlier versions or of course ignored the answers and solution prototypes that I knew were wrong or would not work.
