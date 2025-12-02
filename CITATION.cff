@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: >
+  If you use this repository in your research, please cite it using the entry
+  below and also cite the original paper whose experiments are reproduced.
+title: "kameris-repo: clean-room reproduction of KAMERIS experiments"
+abstract: >
+  A from-scratch, alignment-free k-mer classification pipeline in Python that
+  reproduces the experiments from “An open-source k-mer based machine learning
+  tool for fast and accurate subtyping of HIV-1 genomes” (PLOS ONE, 2018).
+authors:
+  - family-names: Ducharme
+    given-names: Wesley
+    affiliation: University of Victoria
+keywords:
+  - bioinformatics
+  - k-mer
+  - HIV-1
+  - reproduction
+repository-code: "https://github.com/WesleyGDucharme/Bioinformatics-Final-Project"
+version: 0.1.0
+date-released: "2025-12-02"
+
+preferred-citation:
+  type: software
+  title: "kameris-repo: clean-room reproduction of KAMERIS experiments"
+  authors:
+    - family-names: Ducharme
+      given-names: Wesley
+  version: 0.1.0
+  url: "https://github.com/WesleyGDucharme/Bioinformatics-Final-Project"
+  date-released: "2025-12-02"
+
+references:
+  - type: article
+    title: "An open-source k-mer based machine learning tool for fast and accurate subtyping of HIV-1 genomes"
+    doi: 10.1371/journal.pone.0206409
+    journal: PLOS ONE
+    year: 2018
+    url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0206409"
+    notes: "Primary study being reproduced."
+  - type: software
+    title: "KAMERIS"
+    url: "https://github.com/stephensolis/kameris"
+    notes: "Upstream tool; not imported or copied in this reimplementation."
