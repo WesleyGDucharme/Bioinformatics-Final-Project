@@ -1,5 +1,5 @@
 # Bioinformatics-Final-Project
-Final project for CSC427 at Uvic. For this project we are to find a bioinformatics paper and recreate / reimplement their code and experiments to then compare our results with the original authors. This is done to get experience testing the reproducability of experiments and performing said experiments. 
+Final project for CSC427 at Uvic. For this project we are to find a bioinformatics paper and recreate / reimplement their code and experiments to then compare our results with the original authors. This is done to get experience testing the reproducibility of experiments and performing said experiments. 
 
 Kameris reimplementation:
 
@@ -41,16 +41,9 @@ Key scripts:
 - `scripts/modmap_plot.py` and `scripts/make_modmap_*` — mapping/plotting helpers for accession IDs and MoDMaps.
 
 
-## Data and labels
+## Data 
 
-- The `data/` folder bundles small manifests and label files. Large FASTA datasets are present in subfolders (for example `data/flu_a/fasta/`) and many of those folders contain hundreds or thousands of single-sequence FASTA files.
-- Each dataset directory typically contains:
-  - a JSON manifest (e.g., `hiv1-lanl-whole.json`),
-  - `labels.tsv` - tab-separated label file used by the loader,
-  - `labels_report.json` - summary statistics of classes,
-  - one or more sequence folders containing FASTA files.
-
-These datasets are all git ignored.
+- Please refer to the source paper referenced in CITATION.cff and report.md for instructions on how to acquire the data files used for this reimplementation.
 
 
 ## Key scripts and example usages
@@ -66,6 +59,8 @@ PYTHONPATH=src python3 scripts/run_from_yaml.py experiments/hiv1_lanl_whole.yml
 ```
 
 This runs the configured pipeline (feature extraction, model training, CV) and saves metrics, timings and logs into the chosen output directory.
+
+Example commands assume you’ve installed deps and either run from a virtual env with pip install -e . or prefix with PYTHONPATH=src (as shown).
 
 2) Run the runner with a single-spec programmatic entrypoint
 
