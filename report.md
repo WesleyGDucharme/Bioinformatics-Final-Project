@@ -103,7 +103,7 @@ The models tested are:
 More details on the parameters used for these classifiers can be found in the source paper [1]. For the experiments both training and test datasets were used but the primary classifier identification experiments 10 fold cross validation was used for the assessment of model performance. In the results section each classifiers 10 fold validation accuracies are reported and compared and the best model selected for later experiments.
 
 Unsupervised methods were also explored in this reimplementation as in the cases where labels may be unknown in datasets, visualizing possible clusters and and potential overlap between sequence subtypes ahead of time can show if adequate separation and identification is possible. For this purpose molecular distance maps, aka ModMaps, were used for these visualizations. As in the source paper, the manhattan distance $d_M(A,B) = \sum_{i=1}^{n} |a_i - b_i|.$
-was used to construct a pair wise distance matrix that was then visualized using MDS in a 3d plot. 2d figures of these visualizations are attached in the results section showing these sequence separations.
+was used to construct a pair wise distance matrix that was then visualized using MDS in a 3d plot [1]. 2d screen shots of these visualizations are attached in the results section showing these sequence separations.
 
 
 ## Source package
@@ -128,53 +128,30 @@ This source package handles the following:
 This section will outline the results of the experiments outlined in earlier sections. They like the paper these experiments involves the following procedures. Perform 10-fold cross validation on the hiv1 lanl whole genome dataset training all 15 classifier models outlined above with a k=6. Compiling the accuracy and runtime results in a table that includes the paper's original accuracy metrics. This cross validation process is then repeated for the hiv1 lanl polfragments, Dengue, influenza A, hepatitis B and hepatitis C datasets using only the linear svm model, since it was the best performing classifier. The benchmark experiment follows the papers steps where a linear svm is trained on the hiv1 web pol2010 dataset and then tested on the benchmark dataset of mixed polfragements from an amalgamation of other datasets referenced in the paper to test how a trained model generalizes across datasets. The final supervised model experiment was where testing was done to see if using the linear svm model could distinguish between Synthetic and Natural sequence data.  
 
 
-| Table 1. Classifier performance on the Whole Genome dataset, Pymeris |
-|----------------------------------------------------------------------|
+**Table 1. Classifier performance on the Whole Genome dataset, Pymeris vs Kameris**
 
-| Model | Mean Accuracy | Std Accuracy | Mean Runtime |
-|-------|--------------:|-------------:|-------------:|
-| Linear SVM | 96.73% | 0.70% | 504.49s |
-| Logistic Regression | 95.77% | 0.69% | 528.44s |
-| Multilayer-perceptron | 95.69% | 0.45% | 621.97s |
-| LDA | 95.09% | 0.66% | 486.27s |
-| Nearest Centroid (median) | 94.34% | 0.61% | 481.16s |
-| 10-Nearest Neighbors | 94.07% | 0.64% | 490.24s |
-| Nearest Centroid (mean) | 94.05% | 0.63% | 478.93s |
-| Decision Tree | 93.75% | 0.67% | 502.90s |
-| AdaBoost | 93.54% | 0.83% | 503.10s |
-| Cubic SVM | 93.53% | 0.48% | 501.59s |
-| Random Forest | 93.30% | 0.49% | 488.69s |
-| Quadratic SVM | 92.85% | 0.46% | 504.36s |
-| SGD | 88.84% | 6.10% | 481.20s |
-| Gaussian NB | 88.49% | 1.05% | 478.67s |
-| QDA | 75.51% | 0.47% | 490.52s |
-
-
-| Table 2. Classifier performance on the Whole Genome dataset, Kameris |
-|----------------------------------------------------------------------|
-
-| Model | Accuracy | Mean running time |
-|-------|---------:|------------------:|
-| cubic-svm | 96.66% | 59.7s |
-| quadratic-svm | 96.59% | 58.3s |
-| linear-svm | 96.49% | 57.7s |
-| multilayer-perceptron | 95.49% | 60.6s |
-| logistic-regression | 95.32% | 102.0s |
-| 10-nearest-neighbors | 93.97% | 44.3s |
-| nearest-centroid-median | 93.95% | 34.0s |
-| nearest-centroid-mean | 93.84% | 33.7s |
-| decision-tree | 93.53% | 62.3s |
-| random-forest | 93.07% | 43.7s |
-| sgd | 91.10% | 37.4s |
-| gaussian-naive-bayes | 87.75% | 34.0s |
-| lda | 77.76% | 36.0s |
-| qda | 75.13% | 38.3s |
-| adaboost | 64.85% | 159.3s |
+| Model | Pymeris |              | Kameris |                                        |
+|-------|---------------------------|--------------|-----------------|--------------|
+|       | Mean Acc (%)              | Mean Runtime (s) | Mean Acc (%)      | Runtime (s) |
+| Linear SVM             | 96.73 | 504.49 | 96.49 | 57.7 |
+| Logistic Regression    | 95.77 | 528.44 | 95.32 | 102.0 |
+| Multilayer Perceptron  | 95.69 | 621.97 | 95.49 | 60.6 |
+| LDA                    | 95.09 | 486.27 | 77.76 | 36.0 |
+| Nearest Centroid (median) | 94.34 | 481.16 | 93.95 | 34.0 |
+| 10-Nearest Neighbors   | 94.07 | 490.24 | 93.97 | 44.3 |
+| Nearest Centroid (mean)| 94.05 | 478.93 | 93.84 | 33.7 |
+| Decision Tree          | 93.75 | 502.90 | 93.53 | 62.3 |
+| AdaBoost               | 93.54 | 503.10 | 64.85 | 159.3 |
+| Cubic SVM              | 93.53 | 501.59 | 96.66 | 59.7 |
+| Random Forest          | 93.30 | 488.69 | 93.07 | 43.7 |
+| Quadratic SVM          | 92.85 | 504.36 | 96.59 | 58.3 |
+| SGD                    | 88.84 | 481.20 | 91.10 | 37.4 |
+| Gaussian NB            | 88.49 | 478.67 | 87.75 | 34.0 |
+| QDA                    | 75.51 | 490.52 | 75.13 | 38.3 |
 
 Like in the paper the linear svm classifier is a top performer though runtimes across the board are significantly longer. This is due to the fact that they implemented the feature vector computation in C++ where this package is done only in python using libraries like NumPy and SciPy. This was done due to my lack of knowledge of C++ and my familiarity with python. As seen in table there is a significant difference between runtimes as this pure python implementation has a reported runtime 7-8x higher than the paper's for the linear svm model. The linear-svm model is still a top performer with an accuracy of 96.73% which shows a slight improvement over the paper's original reported accuracy of 96.49% [1]. Some other models that show surprisingly significant improvement in performance compared to the original paper are the ada boost and lda models. With all other classifiers showing very similar performance in this reimplementation. I proceed with performing the other experiments outlined in the experiments section using the linear svm model to further verify that these methods work for other datasets as it has proven to be the best well rounded classifier with mid range runtime and the highest reported accuracy.
 
-| Table 3. Generalization experiment performance comparisons |
-|----------------------------------------------------------|
+**Table 2. Generalization experiments, performance comparisons**
 
 | Experiment | Pymeris Accuracy | Kameris Accuracy |
 |------------|---------:|-----------------:|
@@ -185,17 +162,16 @@ Like in the paper the linear svm classifier is a top performer though runtimes a
 | Influenza A | 96.65% | 96.68% | 
 
 
-The results outlined in table 3 show that our methods generalize to other viral datasets well and with high accuracy in the approximately 95% to 99.99% range. Closely mirroring the papers results with the methods showing that more isolated predictions on partial genes like the pol gene retain reasonably high accuracy. High accuracy is retained for subtype classification on sequences from other viruses as well. Averaging in the high 90s for accuracy in the dengue, hepatitis B, hepatitis C and influenza A experiments.
+The results outlined in table 2 show that our methods generalize to other viral datasets well and with high accuracy in the approximately 95% to 99.99% range. Closely mirroring the papers results with the methods showing that more isolated predictions on partial genes like the pol gene retain reasonably high accuracy. High accuracy is retained for subtype classification on sequences from other viruses as well. Averaging in the high 90s for accuracy in the dengue, hepatitis B, hepatitis C and influenza A experiments.
 
-| Table 4. Benchmark and Synthetic vs Natural genome comparisons |
-|----------------------------------------------------------------|
+**Table 3. Benchmark and Synthetic vs Natural genome comparisons**
 
 | Experiment                           | Pymeris Accuracy | Kameris Accuracy |
 |--------------------------------------|------------------|------------------|
 | Benchmark test (reimplementation)    | 82.40%       | 94.3%          |
 | Synthetic vs natural pol fragments   | 99.98%       | 100%           |
 
-For the benchmark test the reimplementation struggles to match the original 94.3% reported accuracy from the source paper. The possible reasons for this drop in accuracy are elusive and could lie in a problem with the data acquisition of this dataset or simply some other non disclosed or missed method that was performed on this dataset in the source paper. The experiment showing the methods ability to differentiate synthetic from natural pol sequences show very similar results to the outcome of the experiment in the kameris experiments [1]. With results showing that there are some significant differences between synthetic and natural sequences that the linear svm classifier is able to detect. This separation as well as other subtype separations can be visualized using modmap using the unsupervised methods outlined in the methods section above and in the Kameris experiments [1]. 
+For the benchmark test the reimplementation struggles to match the original 94.3% reported accuracy from the source paper as outlined in table 3. The possible reasons for this drop in accuracy are elusive and could lie in a problem with the data acquisition of this dataset or simply some other non disclosed or missed method that was performed on this dataset in the source paper. The experiment showing the methods ability to differentiate synthetic from natural pol sequences show very similar results to the outcome of the experiment in the kameris experiments [1]. With results showing that there are some significant differences between synthetic and natural sequences that the linear svm classifier is able to detect. This separation as well as other subtype separations can be visualized using modmap using the unsupervised methods outlined in the methods section above and in the Kameris experiments [1]. 
 
 
 | Figure 1 a. Natural vs Synthetic HIV-1 pol genes |
