@@ -18,7 +18,7 @@ keywords:
   - reproduction
 repository-code: "https://github.com/WesleyGDucharme/Bioinformatics-Final-Project"
 version: 0.1.0
-date-released: "2025-12-02"
+date-released: "2025-12-03"
 
 preferred-citation:
   type: software
@@ -28,7 +28,7 @@ preferred-citation:
       given-names: Wesley
   version: 0.1.0
   url: "https://github.com/WesleyGDucharme/Bioinformatics-Final-Project"
-  date-released: "2025-12-02"
+  date-released: "2025-12-03"
 
 references:
   - type: article
