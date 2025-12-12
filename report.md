@@ -31,8 +31,8 @@ Running each of these jobs yielded the following datasets. The experiments they 
     - Acquired by running job 1 in appendix 1 of the paper.
     - Used for the first experiment comparing classifier performance.
 - HIV-1 Pol genes
- - Acquired by running job 2 in appendix 1.
- - Used in the second experiment comparing chosen best model performance on whole vs partial genome sequences.
+    - Acquired by running job 2 in appendix 1.
+    - Used in the second experiment comparing chosen best model performance on whole vs partial genome sequences.
 - HIV-1 Benchmark test dataset
     - This dataset is an manually created amalgamation of other HIV-1 datasets from various sources, used to test the best classifier model on separate data.
     - Acquired by running job 3 in appendix 1.
